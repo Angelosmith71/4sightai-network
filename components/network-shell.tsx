@@ -35,6 +35,7 @@ const DESKTOP = [
   { href: "/events", label: "Events" },
   { href: "/trust", label: "Trust" },
   { href: "/explore", label: "Explore" },
+  { href: "https://www.4sightai.net", label: "Security" },
 ] as const
 
 const MOBILE = [
@@ -46,6 +47,7 @@ const MOBILE = [
 ] as const
 
 function activePath(pathname: string, href: string) {
+  if (href.startsWith("http")) return false
   if (href === "/") return pathname === "/"
   return pathname.startsWith(href)
 }
@@ -64,20 +66,26 @@ export function NetworkShell({ children }: { children: React.ReactNode }) {
             <Wordmark compact />
           </Link>
           <nav className="ml-2 hidden items-center gap-0.5 xl:flex">
-            {DESKTOP.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "rounded-full px-3 py-1.5 text-sm transition-colors",
-                  activePath(pathname, item.href)
-                    ? "bg-white/10 text-white"
-                    : "text-sky-100/70 hover:bg-white/5 hover:text-white"
-                )}
-              >
-                {item.label}
-              </Link>
-            ))}
+            {DESKTOP.map((item) => {
+              const isExternal = item.href.startsWith("http")
+              const className = cn(
+                "rounded-full px-3 py-1.5 text-sm transition-colors",
+                item.label === "Security"
+                  ? "bg-guardian/15 text-guardian hover:bg-guardian/25 border border-guardian/30 font-medium"
+                  : activePath(pathname, item.href)
+                  ? "bg-white/10 text-white"
+                  : "text-sky-100/70 hover:bg-white/5 hover:text-white"
+              )
+              return isExternal ? (
+                <a key={item.href} href={item.href} className={className}>
+                  {item.label}
+                </a>
+              ) : (
+                <Link key={item.href} href={item.href} className={className}>
+                  {item.label}
+                </Link>
+              )
+            })}
           </nav>
           <div className="ml-auto flex items-center gap-2">
             <SearchPalette />

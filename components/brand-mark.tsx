@@ -4,14 +4,14 @@ import { cn } from "@/lib/utils"
 export function BrandMark({ className, size = 40 }: { className?: string; size?: number }) {
   return (
     <Image
-      src="/logo-mark.webp"
-      alt=""
+      src="/logo.jpg"
+      alt="4Sight Logo"
       width={size}
       height={size}
       unoptimized
       priority
       className={cn(
-        "shrink-0 rounded-full ring-1 ring-electric/40 shadow-[0_0_16px_rgba(77,184,255,0.35)]",
+        "shrink-0 rounded-lg object-cover ring-1 ring-electric/40 shadow-[0_0_16px_rgba(77,184,255,0.35)]",
         className
       )}
     />
