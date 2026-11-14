@@ -11,6 +11,7 @@ export type Person = {
   initials: string
   hue: string
   badges: string[]
+  photo?: string
 }
 
 export type Post = {
@@ -43,7 +44,10 @@ export type Lesson = {
   id: string
   title: string
   minutes: string
+  objective: string
   body: string[]
+  practice: string
+  takeaways: string[]
 }
 
 export type Course = {
@@ -51,8 +55,8 @@ export type Course = {
   title: string
   track: string
   hours: string
-  seedProgress: number
-  instructorId: string
+  level: string
+  updated: string
   blurb: string
   lessons: Lesson[]
 }
@@ -78,4 +82,38 @@ export type OrbitNode = {
   href: string
   x: number
   y: number
+}
+
+export type TechNews = {
+  id: string
+  source: string
+  time: string
+  title: string
+  href: string
+  tag: "Threat" | "Models" | "Agents" | "Policy" | "Security" | "Tech"
+}
+
+export type TechNewsFeed = {
+  live: boolean
+  updated: string
+  items: TechNews[]
+}
+
+export type JobOpening = {
+  id: string
+  title: string
+  org: string
+  location: string
+  track: string
+  href: string
+  blurb: string
+}
+
+export type JobSearch = {
+  trackId: string
+  location: string
+  query: string
+  pitch: string
+  links: { label: string; href: string }[]
+  openings: JobOpening[]
 }

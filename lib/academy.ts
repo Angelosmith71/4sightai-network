@@ -1,7 +1,6 @@
 import type { Course, Lesson } from "./types"
-import { COURSES } from "./courses"
 
-export const LEARN_STORAGE_KEY = "4sight-learn-progress"
+export const LEARN_STORAGE_KEY = "4sight-learn-progress-v2"
 
 export function lessonKey(courseId: string, lessonId: string) {
   return `${courseId}:${lessonId}`
@@ -30,27 +29,24 @@ export function academyComplete(courses: Course[], completed: string[]) {
 }
 
 export function continueHref(courses: Course[], completed: string[]) {
-  const preferred = courses.find((c) => c.id === "agents")
-  const ordered = preferred ? [preferred, ...courses.filter((c) => c.id !== preferred.id)] : courses
-  for (const course of ordered) {
-    const lesson = nextLesson(course, completed)
-    if (lesson) return `/learn/${course.id}/${lesson.id}`
-  }
-  return "/learn"
+  const inProgress = courses.find((course) => {
+    const progress = courseProgress(course, completed)
+    return progress > 0 && progress < 100
+  })
+  const fresh = courses.find((course) => courseProgress(course, completed) === 0)
+  const target = inProgress ?? fresh
+  if (!target) return "/learn"
+  const lesson = nextLesson(target, completed)
+  return lesson ? `/learn/${target.id}/${lesson.id}` : `/learn/${target.id}`
 }
 
-export function seedCompleted(courses: Course[]) {
-  const keys: string[] = []
-  for (const course of courses) {
-    const take = Math.round((course.seedProgress / 100) * course.lessons.length)
-    for (const lesson of course.lessons.slice(0, take)) {
-      keys.push(lessonKey(course.id, lesson.id))
-    }
-  }
-  return keys
+export function courseActionLabel(progress: number) {
+  if (progress >= 100) return "Review"
+  if (progress > 0) return "Continue"
+  return "Start"
 }
 
-const SEED_COMPLETED = seedCompleted(COURSES)
+const SEED_COMPLETED: string[] = []
 const listeners = new Set<() => void>()
 let snapshot = SEED_COMPLETED
 let clientReady = false

@@ -37,6 +37,14 @@ import {
   POSTS,
   replyTo,
 } from "./data"
+import {
+  applyProfile,
+  getProfileServerSnapshot,
+  getProfileSnapshot,
+  saveProfile,
+  subscribeProfile,
+  type ProfileDraft,
+} from "./profile"
 import type { CopilotMsg, Course, Group, Lesson, Notice, Person, Post } from "./types"
 
 type NetworkState = {
@@ -64,12 +72,23 @@ type NetworkState = {
   certificate: IssuedCertificate | null
   purchaseCertificate: (paidCents: number, replace?: boolean) => IssuedCertificate
   orderMailedPrint: () => void
+  saveMe: (draft: ProfileDraft) => void
 }
 
 const NetworkContext = createContext<NetworkState | null>(null)
 
 export function NetworkProvider({ children }: { children: ReactNode }) {
-  const me = PEOPLE.find((p) => p.id === ME_ID)!
+  const seedMe = PEOPLE.find((p) => p.id === ME_ID)!
+  const profile = useSyncExternalStore(
+    subscribeProfile,
+    getProfileSnapshot,
+    getProfileServerSnapshot
+  )
+  const me = useMemo(() => applyProfile(seedMe, profile), [profile, seedMe])
+  const people = useMemo(
+    () => PEOPLE.map((p) => (p.id === ME_ID ? me : p)),
+    [me]
+  )
   const [posts, setPosts] = useState(POSTS)
   const [joined, setJoined] = useState<string[]>(["builders"])
   const [liked, setLiked] = useState<string[]>(["p1"])
@@ -164,10 +183,14 @@ export function NetworkProvider({ children }: { children: ReactNode }) {
     saveCertificate({ ...certificate, mailed: true, paidCents: certificate.paidCents + 2500 })
   }, [certificate])
 
+  const saveMe = useCallback((draft: ProfileDraft) => {
+    saveProfile(draft)
+  }, [])
+
   const value = useMemo(
     () => ({
       me,
-      people: PEOPLE,
+      people,
       posts,
       groups: GROUPS,
       courses: COURSES,
@@ -190,9 +213,11 @@ export function NetworkProvider({ children }: { children: ReactNode }) {
       certificate,
       purchaseCertificate,
       orderMailedPrint,
+      saveMe,
     }),
     [
       me,
+      people,
       posts,
       joined,
       liked,
@@ -211,6 +236,7 @@ export function NetworkProvider({ children }: { children: ReactNode }) {
       certificate,
       purchaseCertificate,
       orderMailedPrint,
+      saveMe,
     ]
   )
 

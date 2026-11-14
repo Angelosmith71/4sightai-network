@@ -35,6 +35,7 @@ const DESKTOP = [
   { href: "/events", label: "Events" },
   { href: "/trust", label: "Trust" },
   { href: "/explore", label: "Explore" },
+  { href: "/about", label: "About Us" },
   { href: "https://www.4sightai.net", label: "Security" },
 ] as const
 
@@ -59,17 +60,17 @@ export function NetworkShell({ children }: { children: React.ReactNode }) {
   const home = pathname === "/"
 
   return (
-    <div className="flex min-h-full flex-col">
+    <div className="flex min-h-svh flex-col">
       <header className="sticky top-0 z-40 border-b border-white/10 bg-[#03060d]/75 backdrop-blur-xl print:hidden">
         <div className="mx-auto flex h-16 max-w-[1440px] items-center gap-3 px-4 sm:px-6">
           <Link href="/" className="shrink-0" aria-label="4SightAI Network home">
             <Wordmark compact />
           </Link>
-          <nav className="ml-2 hidden items-center gap-0.5 xl:flex">
+          <nav className="ml-2 hidden items-center gap-0.5 lg:flex">
             {DESKTOP.map((item) => {
               const isExternal = item.href.startsWith("http")
               const className = cn(
-                "rounded-full px-3 py-1.5 text-sm transition-colors",
+                "rounded-full px-2.5 py-1.5 text-sm transition-colors xl:px-3",
                 item.label === "Security"
                   ? "bg-guardian/15 text-guardian hover:bg-guardian/25 border border-guardian/30 font-medium"
                   : activePath(pathname, item.href)
@@ -114,12 +115,18 @@ export function NetworkShell({ children }: { children: React.ReactNode }) {
         className={cn(
           "mx-auto w-full flex-1",
           home
-            ? "max-w-none px-0 pb-20 lg:pb-8 print:max-w-none print:p-0"
-            : "max-w-[1280px] px-4 py-6 pb-24 sm:px-6 lg:pb-10 print:max-w-none print:p-0"
+            ? "max-w-none px-0 pb-8 print:max-w-none print:p-0"
+            : "max-w-[1280px] px-4 py-6 pb-8 sm:px-6 lg:pb-10 print:max-w-none print:p-0"
         )}
       >
         {children}
       </main>
+
+      <footer className="mt-auto border-t border-white/10 print:hidden">
+        <p className="mx-auto max-w-[1440px] px-4 py-4 pb-[4.75rem] text-center text-xs text-muted-foreground sm:px-6 lg:pb-4">
+          © {new Date().getFullYear()} 4Sight AI Guardian. All rights reserved.
+        </p>
+      </footer>
 
       <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#03060d]/90 backdrop-blur-xl print:hidden lg:hidden">
         <ul className="mx-auto grid max-w-lg grid-cols-5 px-2 py-1.5">
@@ -176,6 +183,9 @@ function SearchPalette() {
     }
     if ("certificate cafp academy".includes(needle) || needle.includes("certif")) {
       rows.push({ href: "/certificate", kind: "Academy", title: "CAFP certificate" })
+    }
+    if ("about us mission founder 4sightai".includes(needle) || needle.includes("about")) {
+      rows.push({ href: "/about", kind: "Network", title: "About Us" })
     }
     return rows.slice(0, 8)
   }, [needle, people, groups, courses])
@@ -248,4 +258,3 @@ export function EmptyNote({ title, body }: { title: string; body: string }) {
     </Glass>
   )
 }
-

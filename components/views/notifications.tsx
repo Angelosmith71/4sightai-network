@@ -35,23 +35,30 @@ function withLiveLearn(
   nextOf: (course: Course) => Lesson | undefined
 ): Notice {
   if (n.kind !== "learn") return n.href ? n : { ...n, href }
-  const agents = courses.find((c) => c.id === "agents")
-  if (!agents) return { ...n, href }
-  const next = nextOf(agents)
-  if (!next) {
+  const resume =
+    courses.find((course) => {
+      const next = nextOf(course)
+      return Boolean(next && course.lessons[0] && next.id !== course.lessons[0].id)
+    }) ?? courses.find((course) => nextOf(course))
+  if (!resume) {
     return {
       ...n,
-      title: "AI Agents complete",
-      body: "Path finished. Review any lesson or open another course.",
-      href: `/learn/${agents.id}`,
+      title: "Academy complete",
+      body: "All paths finished. Review any lesson or open a course again.",
+      href: "/learn",
     }
   }
-  const index = agents.lessons.findIndex((l) => l.id === next.id)
+  const next = nextOf(resume)
+  if (!next) return { ...n, href }
+  const index = resume.lessons.findIndex((l) => l.id === next.id)
+  const started = index > 0
   return {
     ...n,
-    title: `Continue ${agents.title}`,
-    body: `You left off at lesson ${index + 1} of ${agents.lessons.length} — ${next.title.toLowerCase()}.`,
-    href: `/learn/${agents.id}/${next.id}`,
+    title: `${started ? "Continue" : "Start"} ${resume.title}`,
+    body: started
+      ? `You left off at lesson ${index + 1} of ${resume.lessons.length} — ${next.title.toLowerCase()}.`
+      : `Lesson 1 of ${resume.lessons.length} — ${next.title.toLowerCase()}.`,
+    href: `/learn/${resume.id}/${next.id}`,
   }
 }
 

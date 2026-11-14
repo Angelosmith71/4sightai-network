@@ -5,6 +5,7 @@ import type {
   OrbitNode,
   Person,
   Post,
+  TechNews,
 } from "./types"
 import { COURSES } from "./courses"
 
@@ -196,10 +197,10 @@ export const NOTICES: Notice[] = [
   {
     id: "n1",
     kind: "learn",
-    title: "Continue AI Agents",
-    body: "You left off at lesson 3 of 10 — tool use and confirmations.",
+    title: "Start AI Fundamentals",
+    body: "The first academy path is ready — models vs products.",
     time: "1h",
-    href: "/learn/agents/l3",
+    href: "/learn/fundamentals/l1",
   },
   {
     id: "n2",
@@ -222,6 +223,49 @@ export const COPILOT_SEED: CopilotMsg[] = [
     id: "c1",
     role: "copilot",
     text: "How can I help you today?",
+  },
+]
+
+export const TECH_NEWS: TechNews[] = [
+  {
+    id: "tn1",
+    source: "Guardian Brief",
+    time: "32m",
+    tag: "Threat",
+    title: "Voice-cloned “CEO” calls hit three states. Treat unexpected voice instructions as unverified.",
+    href: "/feed",
+  },
+  {
+    id: "tn2",
+    source: "Academy Desk",
+    time: "2h",
+    tag: "Models",
+    title: "Long-context models still fail retrieval evals. More tokens is not a bigger window.",
+    href: "/learn/fundamentals",
+  },
+  {
+    id: "tn3",
+    source: "Security Desk",
+    time: "5h",
+    tag: "Agents",
+    title: "Production traces show agents skipping tool-call confirmations. Kill switches stay on.",
+    href: "/learn/agents",
+  },
+  {
+    id: "tn4",
+    source: "Policy Desk",
+    time: "8h",
+    tag: "Policy",
+    title: "High-risk copilots with write tools now need an audit log before they leave the lab.",
+    href: "/groups/privacy",
+  },
+  {
+    id: "tn5",
+    source: "Industry Wire",
+    time: "11h",
+    tag: "Security",
+    title: "Prompt injection via calendar invites is landing in SaaS copilots this week.",
+    href: "/groups/cyber",
   },
 ]
 
@@ -254,7 +298,7 @@ export function replyTo(prompt: string) {
     return "You already sit in AI Builders. Cybersecurity is the hottest room this week because of the voice-cloning alert. Prompt Engineering matches the course you just finished. Privacy & Ethics is the quieter room if you want policy, not pages."
   }
   if (q.includes("learn") || q.includes("path") || q.includes("course") || q.includes("topic")) {
-    return "You are 75% through AI Fundamentals, 40% Prompt Engineering, 20% AI Agents (lesson 3 of 10), and 60% Cybersecurity Basics. Finish Agents lesson 3 this week — tool confirmations — then close Fundamentals."
+    return "The academy was rebuilt in November 2026 with fuller lessons — objectives, practice, takeaways. You are partway through AI Fundamentals, Prompt Engineering, AI Agents (lesson 3 is still confirmations and the kill switch), and Cybersecurity Basics. Finish Agents lesson 3 this week, then close Fundamentals."
   }
   if (q.includes("threat") || q.includes("scam") || q.includes("voice")) {
     return "Sarah Chen flagged an AI voice-cloning scam hitting small businesses in three states: calls claiming to be the CEO. Treat unexpected voice instructions as unverified. I can draft a share-note for Cybersecurity and Startup Founders."

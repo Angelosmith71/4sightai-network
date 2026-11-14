@@ -1,24 +1,8 @@
+import Link from "next/link"
 import { Glass, SectionLabel } from "@/components/glass"
+import { EVENTS } from "@/lib/events"
 
 export const metadata = { title: "Events" }
-
-const EVENTS = [
-  {
-    title: "Prompt Engineering live studio",
-    when: "Thu · 18:00 ET",
-    where: "AI Builders",
-  },
-  {
-    title: "Voice-cloning threat briefing",
-    when: "Fri · 12:00 ET",
-    where: "Cybersecurity",
-  },
-  {
-    title: "Founder office hours",
-    when: "Sat · 10:00 ET",
-    where: "Startup Founders",
-  },
-]
 
 export default function Page() {
   return (
@@ -33,11 +17,13 @@ export default function Page() {
       <ul className="flex flex-col gap-3">
         {EVENTS.map((event) => (
           <li key={event.title}>
-            <Glass className="p-4">
-              <p className="text-xs text-electric">{event.when}</p>
-              <p className="font-heading text-xl">{event.title}</p>
-              <p className="text-sm text-muted-foreground">{event.where}</p>
-            </Glass>
+            <Link href={event.href}>
+              <Glass className="p-4 transition hover:border-electric/40">
+                <p className="text-xs text-electric">{event.when}</p>
+                <p className="font-heading text-xl">{event.title}</p>
+                <p className="text-sm text-muted-foreground">{event.where}</p>
+              </Glass>
+            </Link>
           </li>
         ))}
       </ul>

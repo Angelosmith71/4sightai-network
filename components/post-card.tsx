@@ -5,14 +5,14 @@ import { Heart, Lightbulb, MessageCircle, ThumbsUp } from "lucide-react"
 import { Avatar } from "@/components/avatar"
 import { Glass } from "@/components/glass"
 import { Button } from "@/components/ui/button"
-import { group, person } from "@/lib/data"
+import { group } from "@/lib/data"
 import { useNetwork } from "@/lib/network-store"
 import type { Post } from "@/lib/types"
 import { cn } from "@/lib/utils"
 
 export function PostCard({ post, compact }: { post: Post; compact?: boolean }) {
-  const { liked, toggleLike } = useNetwork()
-  const author = person(post.authorId)
+  const { liked, toggleLike, people } = useNetwork()
+  const author = people.find((p) => p.id === post.authorId)
   const g = post.groupId ? group(post.groupId) : undefined
   if (!author) return null
   const isLiked = liked.includes(post.id)

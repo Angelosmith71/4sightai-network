@@ -41,7 +41,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`dark ${sans.variable} ${mono.variable} ${heading.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col bg-background text-foreground">
+      <body className="flex min-h-svh flex-col bg-background text-foreground">
         <TooltipProvider>
           <NetworkProvider>
             <NetworkShell>{children}</NetworkShell>

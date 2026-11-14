@@ -46,25 +46,44 @@ export function LessonView() {
   }
 
   return (
-    <div className="mx-auto flex max-w-2xl flex-col gap-5">
+    <div className="mx-auto flex max-w-3xl flex-col gap-5">
       <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
         <Link href={`/learn/${course.id}`} className="text-electric hover:underline">
           ← {course.title}
         </Link>
         <span className="text-muted-foreground">
-          Lesson {index + 1} of {course.lessons.length}
+          Lesson {index + 1} of {course.lessons.length} · {course.updated}
         </span>
       </div>
       <Glass className="p-6 sm:p-8">
         <SectionLabel>
-          {course.track} · {lesson.minutes}
+          {course.track} · {course.level} · {lesson.minutes}
           {done ? " · Complete" : ""}
         </SectionLabel>
         <h1 className="font-heading text-3xl">{lesson.title}</h1>
+        <p className="mt-3 rounded-xl border border-electric/25 bg-electric/10 px-4 py-3 text-sm leading-relaxed">
+          <span className="block text-[11px] tracking-wide text-electric uppercase">Objective</span>
+          {lesson.objective}
+        </p>
         <div className="mt-5 flex flex-col gap-4 text-sm leading-relaxed text-sky-100/85">
           {lesson.body.map((paragraph, i) => (
             <p key={i}>{paragraph}</p>
           ))}
+        </div>
+        <div className="mt-6 rounded-xl border border-white/10 bg-white/[0.03] p-4">
+          <p className="text-[11px] tracking-wide text-electric uppercase">Practice</p>
+          <p className="mt-1 text-sm leading-relaxed">{lesson.practice}</p>
+        </div>
+        <div className="mt-4">
+          <p className="text-[11px] tracking-wide text-muted-foreground uppercase">Takeaways</p>
+          <ul className="mt-2 flex flex-col gap-1.5 text-sm text-sky-100/85">
+            {lesson.takeaways.map((item) => (
+              <li key={item} className="flex gap-2">
+                <span className="mt-2 size-1.5 shrink-0 rounded-full bg-electric" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
         </div>
         <div className="mt-8 flex flex-wrap items-center gap-2">
           {done ? (

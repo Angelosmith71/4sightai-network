@@ -7,7 +7,7 @@ import { Glass, SectionLabel } from "@/components/glass"
 import { EmptyNote } from "@/components/network-shell"
 import { buttonVariants } from "@/components/ui/button"
 import { completedCount, isLessonDone } from "@/lib/academy"
-import { course as findCourse, person } from "@/lib/data"
+import { course as findCourse } from "@/lib/data"
 import { useNetwork } from "@/lib/network-store"
 import { cn } from "@/lib/utils"
 
@@ -15,7 +15,7 @@ export function CourseView() {
   const params = useParams<{ id: string }>()
   const id = String(params?.id ?? "")
   const course = findCourse(id)
-  const { completed, progressOf, nextOf, academyDone, certificate } = useNetwork()
+  const { me, completed, progressOf, nextOf, academyDone, certificate } = useNetwork()
 
   if (!course) {
     return (
@@ -26,7 +26,6 @@ export function CourseView() {
     )
   }
 
-  const instructor = person(course.instructorId)
   const progress = progressOf(course)
   const next = nextOf(course)
   const done = completedCount(course, completed)
@@ -38,16 +37,14 @@ export function CourseView() {
       </Link>
       <Glass className="p-6">
         <SectionLabel>
-          {course.track} · {course.hours}
+          {course.track} · {course.level} · {course.hours} · Updated {course.updated}
         </SectionLabel>
         <h1 className="font-heading text-3xl">{course.title}</h1>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{course.blurb}</p>
-        {instructor ? (
-          <p className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
-            <Avatar person={instructor} size="sm" />
-            {instructor.name} · {instructor.role}
-          </p>
-        ) : null}
+        <p className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
+          <Avatar person={me} size="sm" />
+          {me.name}
+        </p>
         <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-white/10">
           <div className="h-full rounded-full bg-electric" style={{ width: `${progress}%` }} />
         </div>
@@ -56,7 +53,7 @@ export function CourseView() {
         </p>
         {next ? (
           <Link href={`/learn/${course.id}/${next.id}`} className={cn(buttonVariants(), "mt-4")}>
-            Continue · {next.title}
+            {progress === 0 ? "Start" : "Continue"} · {next.title}
           </Link>
         ) : academyDone ? (
           <div className="mt-4 flex flex-wrap items-center gap-3">
